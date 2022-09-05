@@ -1,3 +1,7 @@
+api.http.host: 0.0.0.0
+api.http.port: {{ v "elasticsearch-http-port" }}
+
+
 # Settings file in YAML
 #
 # Settings can be specified either in hierarchical form, e.g.:

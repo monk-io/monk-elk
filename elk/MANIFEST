@@ -1,3 +1,0 @@
-REPO monk-elk
-LOAD elk-stack.yaml stack.yaml
-RESOURCES files/elasticsearch.yml

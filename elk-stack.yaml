@@ -1,0 +1,210 @@
+namespace: elk
+
+
+elasticsearch:
+  defines: runnable
+  metadata:
+    defines: metadata
+    name: elasticsearch
+    description: Elasticsearch is the world leading free and open search and analytics solution. With an emphasis on speed, scale, and relevance it's transforming how the world uses data.
+    tags: self hosted, search platform, 
+    website: https://www.elastic.co/
+    source: https://github.com/elastic/elasticsearch
+    publisher: "monk.io"
+    icon: https://styles.redditmedia.com/t5_2wfpz/styles/communityIcon_toltvcrokgr31.jpg
+  containers:
+    defines: containers
+    elasticsearch:
+      image: docker.elastic.co/elasticsearch/elasticsearch
+      image-tag: <- `${elasticsearch-image}`
+      user: "1000"
+      ports:
+      - <- `${internal-port}:${internal-port}`
+      - <- `${port}:${port}`
+      paths:
+        - <- `${monk-volume-path}/elasticsearch/data:/usr/share/elasticsearch/data`      
+  files:
+    elasticsearch-config:
+      container: elasticsearch
+      mode: 0644
+      path: /usr/share/elasticsearch/config/elasticsearch.yml
+      contents: <<< files/elasticsearch.yml
+  variables:
+    defines: variables
+    elasticsearch-image:
+      value: <- $elasticsearch-image-tag
+      type: string
+    jvm-opts:
+      env: ES_JAVA_OPTS
+      value: <- $elasticsearch-jvm-options
+      type: string
+    port:
+      value: <- $elasticsearch-http-port
+      type: int
+    internal-port:
+      value: <- $elasticsearch-internal-port
+      type: int
+    discovery-type:
+      env: discovery.type
+      value: single-node
+      type: string      
+
+kibana:
+  defines: runnable
+  metadata:
+    defines: metadata
+    name: kibana
+    description: Kibana is a source-available data visualization dashboard software for Elasticsearch, whose free and open source successor in OpenSearch is OpenSearch Dashboards.
+    tags: self hosted, visualization, monitoring
+    website: https://www.elastic.co/kibana/
+    source: https://github.com/elastic/elasticsearch
+    publisher: "monk.io"
+    icon: https://www.vectorlogo.zone/logos/elasticco_kibana/elasticco_kibana-ar21.png 
+  containers:
+    defines: containers
+    kibana:
+      image: docker.elastic.co/kibana/kibana
+      image-tag: <- `${kibana-image}`
+      user: "1000"
+      ports:
+      - <- `${port}:${port}`
+      environment:
+      - <- `ELASTICSEARCH_HOSTS=http://${elasticsearch-hosts}:${elasticsearch-port}`
+      paths:
+        - <- `${monk-volume-path}/kibana/data:/usr/share/kibana/data`
+  depends:
+    wait-for:
+      runnables:
+        - elk/elasticsearch
+  files:
+    kibana-config:
+      container: kibana
+      mode: 0644
+      path: /usr/share/kibana/config/kibana.yml
+      contents: <<< files/kibana.yml
+  variables:
+    defines: variables
+    kibana-image:
+      value: <- $kibana-image-tag
+      type: string    
+    elasticsearch-hosts:
+      type: string
+      value: <- get-hostname("elk/elasticsearch", "elasticsearch") split(".dns.podman") join("")
+    port:
+      type: int
+      value:  <- $kibana-http-port
+    elasticsearch-port:
+      type: int
+      value:  <- $elasticsearch-http-port
+      
+
+
+logstash:
+  defines: runnable
+  metadata:
+    defines: metadata
+    name: logstash
+    description: Logstash is a free and open server-side data processing pipeline that ingests data from a multitude of sources, transforms it, and then sends it to your favorite "stash."
+    tags: self hosted, data processing pipeline, logging
+    website: https://www.elastic.co/kibana/
+    source: https://www.elastic.co/logstash/
+    publisher: "monk.io"
+    icon: https://www.vectorlogo.zone/logos/elasticco_logstash/elasticco_logstash-ar21.png  
+  containers:
+    defines: containers
+    logstash:
+      image: docker.elastic.co/logstash/logstash
+      image-tag: <- `${logstash-image}`
+      user: "root"
+      ports:
+      - 5044:5044/tcp
+      - 5044:5044/udp
+      - "50000:50000/tcp"
+      - "50000:50000/udp"
+      - <- `${port}:${port}`
+  depends:
+    wait-for:
+      runnables:
+        - elk/elasticsearch
+  files:
+    logstash-config:
+      container: logstash
+      mode: 0644
+      path: /usr/share/logstash/config/logstash.yml
+      contents: <<< files/logstash.yml
+    logstash-pipeline:
+      container: logstash
+      mode: 0644
+      path: /usr/share/logstash/pipeline/logstash.conf
+      contents: <<< files/pipeline/logstash.conf
+  variables:
+    defines: variables
+    logstash-image:
+      value: <- $logstash-image-tag
+      type: string    
+    elasticsearch-hosts:
+      type: string
+      value: <- get-hostname("elk/elasticsearch", "elasticsearch") split(".dns.podman") join("")
+    elasticsearch-port:
+      type: int
+      value:  <- $elasticsearch-http-port
+    jvm-opts:
+      env: LS_JAVA_OPTS
+      value: <- $logstash-jvm-options
+      type: string
+    monitoring-elasticsearch-hosts:
+      env: monitoring.elasticsearch.hosts
+      value: <- "http://" get-hostname("elk/elasticsearch", "elasticsearch") split(".dns.podman") join("") ":" $elasticsearch-http-port concat-all
+      type: string      
+    port:
+      type: int
+      value:  <- $logstash-http-port
+
+nginx:
+  defines: runnable
+  inherits: nginx
+  files:
+    server-def:
+      contents: |
+        server {
+          listen 0.0.0.0:{{ v "listen-port" }};
+          server_name {{ v "server-name" }};
+          location / {
+            proxy_set_header X-Real-IP  $remote_addr;
+            proxy_set_header X-Forwarded-For $remote_addr;
+            proxy_set_header X-Forwarded-Proto $scheme;
+            proxy_set_header Host $host;
+            proxy_pass http://{{ v "proxy-target-host" }}:{{ v "proxy-target-port" }};
+          }
+        }
+      mode: 511
+      path: /opt/bitnami/nginx/conf/server_blocks/reverse_proxy.conf
+      container: nginx-reverse-proxy
+  containers:
+    defines: containers
+    nginx-reverse-proxy:
+      image-tag: <- `${nginx-image}`
+      image: docker.io/bitnami/nginx
+      ports:
+      - <- `0.0.0.0:${listen-port}:${listen-port}/tcp`
+  depends:
+    wait-for:
+      runnables:
+        - elk/kibana
+      timeout: 30
+  variables:
+    proxy-target-host:
+      value: <- get-hostname("elk/kibana", "kibana") split(".dns.podman") join("")
+      type: string
+    listen-port:
+      value: <- $nginx-listen-port
+      type: string
+    server-name:
+      value: <- $kibana-server-name
+      type: string
+    proxy-target-port:
+      value: <- $kibana-http-port
+      type: string
+    nginx-image:
+      value: <- $nginx-image-tag
+      type: string      
