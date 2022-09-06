@@ -241,11 +241,12 @@ runnable  nginx/reverse-proxy-ssl-certbot  elk         1.15-alpine  -
 ## Stop, remove and clean up workloads and templates
 
 ```bash
-➜ monk purge -x elk/stack elk/elasticsearch elk/kibana elk/logstash elk/kibana
+➜ monk purge -x elk/stack elk/elasticsearch elk/kibana elk/logstash elk/nginx
 
 ✔ elk/stack purged
 ✔ elk/elasticsearch purged
 ✔ elk/kibana purged
 ✔ elk/logstash purged
+✔ elk/nginx purged
 
 ```
