@@ -221,7 +221,7 @@ runnable  nginx/reverse-proxy-ssl-certbot  elk         1.15-alpine  -
 ➜  monk logs -l 1000 -f elk/logstash
 
 # show nginx logs
-➜  monk logs -l 1000 -f elk/kibana
+➜  monk logs -l 1000 -f elk/nginx
 
 
 # access shell in the container running Elasticsearch
@@ -234,7 +234,7 @@ runnable  nginx/reverse-proxy-ssl-certbot  elk         1.15-alpine  -
 ➜  monk shell elk/logstash
 
 # access shell in the container running Nginx
-➜  monk shell elk/kibana
+➜  monk shell elk/nginx
 
 ```
 
