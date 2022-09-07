@@ -134,7 +134,7 @@ To deploy the above system to your cloud provider, create a new Monk cluster and
 
 ```bash
 ➜  monk cluster new
-? New cluster name elk
+? New cluster name elkstack
 ✔ Cluster created
 Your cluster has been created successfully.
 
@@ -143,8 +143,8 @@ Your cluster has been created successfully.
 
 ➜  monk cluster grow -p gcp
 ? Cloud provider gcp
-? Name of the new instance my-instance
-? Tags (split by whitespace) elk
+? Name of the new instance elk-instance
+? Tags (split by whitespace) elkstack
 ? Region europe-central2
 ? Zone europe-central2-a
 ? Instance type e2-medium
