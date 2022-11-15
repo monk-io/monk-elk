@@ -18,7 +18,7 @@ monk login --email=<email> --password=<password>
 
 In order to load templates and change configuration simply use below commands: 
 ```bash
-git clone https://github.com/kaganmersin/monk-elk
+git clone https://github.com/monk-io/monk-elk
 
 # and change directory to the monk-elk template folder
 cd monk-elk
