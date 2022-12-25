@@ -44,7 +44,6 @@ The current variables can be found in `elk/variables` section
     logstash-http-port: 9600
     nginx-listen-port: 8080
     nginx-image-tag: "latest"
-    kibana-server-name: "kibana.example.com"  
 ```
 
 ### ELK Stack configuration files
@@ -78,7 +77,6 @@ You can find configuration files in `/files` directory in repository and can edi
 | **logstash-http-port** | Logstash port that will accept requests | int | 9600
 | **nginx-listen-port** | Configures the ports that the nginx listens on. | int | 80 |
 | **nginx-image-tag** | Nginx image version. | string | latest |
-| **kibana-server-name** | Fqdn that nginx will accept and route to. | string | kibana.example.com |
 
 
 

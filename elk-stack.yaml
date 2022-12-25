@@ -3,6 +3,17 @@ namespace: elk
 
 elasticsearch:
   defines: runnable
+  services:
+    elasticsearch:
+      container: elasticsearch
+      port: <- `${port}`
+      protocol: tcp
+      host-port: <- `${port}` to-i
+    elasticsearch-internal:
+      container: elasticsearch
+      port: <- `${internal-port}`
+      protocol: tcp
+      host-port: <- `${internal-port}` to-i
   metadata:
     defines: metadata
     name: elasticsearch
@@ -51,6 +62,16 @@ elasticsearch:
 
 kibana:
   defines: runnable
+  services:
+    kibana-http:
+      container: kibana
+      port: <- `${port}` to-i
+      protocol: tcp
+      host-port: <- `${port}` to-i
+  connections:
+    elasticsearch:
+      runnable: elk/elasticsearch
+      service: elasticsearch      
   metadata:
     defines: metadata
     name: kibana
@@ -89,7 +110,7 @@ kibana:
       type: string    
     elasticsearch-hosts:
       type: string
-      value: <- get-hostname("elk/elasticsearch", "elasticsearch") split(".dns.podman") join("")
+      value: <- connection-hostname("elasticsearch")
     port:
       type: int
       value:  <- $kibana-http-port
@@ -101,6 +122,26 @@ kibana:
 
 logstash:
   defines: runnable
+  services:
+    logstash-5044:
+      container: logstash
+      port: 5044
+      protocol: tcp
+      host-port: 5044
+    logstash-50000:
+      container: logstash
+      port: 50000
+      protocol: tcp
+      host-port: 50000
+    logstash-9600:
+      container: logstash
+      port: 9600
+      protocol: tcp
+      host-port: 9600        
+  connections:
+    elasticsearch:
+      runnable: elk/elasticsearch
+      service: elasticsearch              
   metadata:
     defines: metadata
     name: logstash
@@ -121,7 +162,7 @@ logstash:
       - 5044:5044/udp
       - "50000:50000/tcp"
       - "50000:50000/udp"
-      - <- `${port}:${port}`
+      - "9600:9600/tcp"
   depends:
     wait-for:
       runnables:
@@ -144,7 +185,7 @@ logstash:
       type: string    
     elasticsearch-hosts:
       type: string
-      value: <- get-hostname("elk/elasticsearch", "elasticsearch") split(".dns.podman") join("")
+      value: <- connection-hostname("elasticsearch")
     elasticsearch-port:
       type: int
       value:  <- $elasticsearch-http-port
@@ -154,21 +195,28 @@ logstash:
       type: string
     monitoring-elasticsearch-hosts:
       env: monitoring.elasticsearch.hosts
-      value: <- "http://" get-hostname("elk/elasticsearch", "elasticsearch") split(".dns.podman") join("") ":" $elasticsearch-http-port concat-all
-      type: string      
-    port:
-      type: int
-      value:  <- $logstash-http-port
+      value: <- "http://" connection-hostname("elasticsearch") ":" $elasticsearch-http-port concat-all
+      type: string
+
 
 nginx:
   defines: runnable
   inherits: nginx
+  services:
+    nginx:
+      container: nginx-reverse-proxy
+      port: <- `${listen-port}`
+      protocol: tcp
+      # host-port: <- `${listen-port}`
+  connections:
+    rabbitmq:
+      runnable: elk/kibana
+      service: kibana-http
   files:
     server-def:
       contents: |
         server {
           listen 0.0.0.0:{{ v "listen-port" }};
-          server_name {{ v "server-name" }};
           location / {
             proxy_set_header X-Real-IP  $remote_addr;
             proxy_set_header X-Forwarded-For $remote_addr;
