@@ -207,9 +207,9 @@ nginx:
       container: nginx-reverse-proxy
       port: <- `${listen-port}`
       protocol: tcp
-      # host-port: <- `${listen-port}`
+      host-port: <- `${listen-port}`
   connections:
-    rabbitmq:
+    kibana:
       runnable: elk/kibana
       service: kibana-http
   files:
@@ -242,7 +242,7 @@ nginx:
       timeout: 30
   variables:
     proxy-target-host:
-      value: <- get-hostname("elk/kibana", "kibana") split(".dns.podman") join("")
+      value: <- connection-hostname("kibana")
       type: string
     listen-port:
       value: <- $nginx-listen-port
