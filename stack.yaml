@@ -17,8 +17,8 @@ stack:
     logstash-image-tag: 7.17.5
     logstash-jvm-options: "-Xmx256m -Xms256m"   
     logstash-http-port: 9600
-    nginx-listen-port: 8080
-    nginx-image-tag: latest  
+    nginx-listen-port: 80
+    nginx-image-tag: latest
 
 
 
