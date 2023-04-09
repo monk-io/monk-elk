@@ -17,7 +17,12 @@ elasticsearch:
   metadata:
     defines: metadata
     name: elasticsearch
-    description: Elasticsearch is the world leading free and open search and analytics solution. With an emphasis on speed, scale, and relevance it's transforming how the world uses data.
+    description: |
+        Elasticsearch is an open-source, distributed, RESTful search and analytics engine. 
+        
+        It is built on top of the Apache Lucene library and is designed for high-speed searching, indexing, and analysis of large volumes of data in real-time. 
+        
+        Elasticsearch is part of the Elastic Stack, which also includes Logstash for data collection and processing, and Kibana for data visualization and management.
     tags: self hosted, search platform, 
     website: https://www.elastic.co/
     source: https://github.com/elastic/elasticsearch
@@ -75,7 +80,12 @@ kibana:
   metadata:
     defines: metadata
     name: kibana
-    description: Kibana is a source-available data visualization dashboard software for Elasticsearch, whose free and open source successor in OpenSearch is OpenSearch Dashboards.
+    description: |
+       Kibana is an open-source data visualization and exploration tool that is part of the Elastic Stack, which also includes Elasticsearch for search and analytics, and Logstash for data collection and processing. 
+       
+       Kibana provides a web-based interface for visualizing, analyzing, and managing data stored in Elasticsearch, making it a powerful tool for exploring and understanding large volumes of data.
+
+       Kibana allows users to create a wide range of visualizations, dashboards, and reports to gain insights from data. Some key features of Kibana include:
     tags: self hosted, visualization, monitoring
     website: https://www.elastic.co/kibana/
     source: https://github.com/elastic/elasticsearch
@@ -145,7 +155,12 @@ logstash:
   metadata:
     defines: metadata
     name: logstash
-    description: Logstash is a free and open server-side data processing pipeline that ingests data from a multitude of sources, transforms it, and then sends it to your favorite "stash."
+    description: |
+       Logstash is an open-source data collection and processing tool that is part of the Elastic Stack, which also includes Elasticsearch for search and analytics, and Kibana for data visualization and management. 
+       
+       Logstash is designed to collect, process, and transform data from various sources, and then send it to Elasticsearch for indexing and analysis.
+
+       Logstash is commonly used for collecting, parsing, and enriching log data, but it can also handle a wide variety of other data types such as metrics, events, and other structured or unstructured data. Some key features of Logstash include:
     tags: self hosted, data processing pipeline, logging
     website: https://www.elastic.co/kibana/
     source: https://www.elastic.co/logstash/
