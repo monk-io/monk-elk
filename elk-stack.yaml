@@ -217,6 +217,8 @@ logstash:
 nginx:
   defines: runnable
   inherits: nginx
+  metadata:
+    private: true
   services:
     nginx:
       container: nginx-reverse-proxy
