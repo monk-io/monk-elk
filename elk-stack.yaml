@@ -8,20 +8,16 @@ elasticsearch:
       container: elasticsearch
       port: <- `${port}`
       protocol: tcp
-      host-port: <- `${port}` to-i
     elasticsearch-internal:
       container: elasticsearch
       port: <- `${internal-port}`
       protocol: tcp
-      host-port: <- `${internal-port}` to-i
   metadata:
     defines: metadata
     name: elasticsearch
     description: |
         Elasticsearch is an open-source, distributed, RESTful search and analytics engine. 
-        
-        It is built on top of the Apache Lucene library and is designed for high-speed searching, indexing, and analysis of large volumes of data in real-time. 
-        
+        It is built on top of the Apache Lucene library and is designed for high-speed searching, indexing, and analysis of large volumes of data in real-time.
         Elasticsearch is part of the Elastic Stack, which also includes Logstash for data collection and processing, and Kibana for data visualization and management.
     tags: self hosted, search platform, 
     website: https://www.elastic.co/
@@ -34,9 +30,6 @@ elasticsearch:
       image: docker.elastic.co/elasticsearch/elasticsearch
       image-tag: <- `${elasticsearch-image}`
       user: "1000"
-      ports:
-      - <- `${internal-port}:${internal-port}`
-      - <- `${port}:${port}`
       paths:
         - <- `${monk-volume-path}/elasticsearch/data:/usr/share/elasticsearch/data`      
   files:
@@ -82,9 +75,7 @@ kibana:
     name: kibana
     description: |
        Kibana is an open-source data visualization and exploration tool that is part of the Elastic Stack, which also includes Elasticsearch for search and analytics, and Logstash for data collection and processing. 
-       
        Kibana provides a web-based interface for visualizing, analyzing, and managing data stored in Elasticsearch, making it a powerful tool for exploring and understanding large volumes of data.
-
        Kibana allows users to create a wide range of visualizations, dashboards, and reports to gain insights from data. Some key features of Kibana include:
     tags: self hosted, visualization, monitoring
     website: https://www.elastic.co/kibana/
@@ -97,8 +88,6 @@ kibana:
       image: docker.elastic.co/kibana/kibana
       image-tag: <- `${kibana-image}`
       user: "1000"
-      ports:
-      - <- `${port}:${port}`
       environment:
       - <- `ELASTICSEARCH_HOSTS=http://${elasticsearch-hosts}:${elasticsearch-port}`
       paths:
@@ -137,17 +126,14 @@ logstash:
       container: logstash
       port: 5044
       protocol: tcp
-      host-port: 5044
     logstash-50000:
       container: logstash
       port: 50000
       protocol: tcp
-      host-port: 50000
     logstash-9600:
       container: logstash
       port: 9600
-      protocol: tcp
-      host-port: 9600        
+      protocol: tcp    
   connections:
     elasticsearch:
       runnable: elk/elasticsearch
@@ -157,9 +143,7 @@ logstash:
     name: logstash
     description: |
        Logstash is an open-source data collection and processing tool that is part of the Elastic Stack, which also includes Elasticsearch for search and analytics, and Kibana for data visualization and management. 
-       
        Logstash is designed to collect, process, and transform data from various sources, and then send it to Elasticsearch for indexing and analysis.
-
        Logstash is commonly used for collecting, parsing, and enriching log data, but it can also handle a wide variety of other data types such as metrics, events, and other structured or unstructured data. Some key features of Logstash include:
     tags: self hosted, data processing pipeline, logging
     website: https://www.elastic.co/kibana/
@@ -172,12 +156,6 @@ logstash:
       image: docker.elastic.co/logstash/logstash
       image-tag: <- `${logstash-image}`
       user: "root"
-      ports:
-      - 5044:5044/tcp
-      - 5044:5044/udp
-      - "50000:50000/tcp"
-      - "50000:50000/udp"
-      - "9600:9600/tcp"
   depends:
     wait-for:
       runnables:
@@ -250,8 +228,6 @@ nginx:
     nginx-reverse-proxy:
       image-tag: <- `${nginx-image}`
       image: docker.io/bitnami/nginx
-      ports:
-      - <- `0.0.0.0:${listen-port}:${listen-port}/tcp`
       cap-add:
         - CAP_NET_BIND_SERVICE       
   depends:
