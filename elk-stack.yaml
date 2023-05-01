@@ -194,7 +194,6 @@ logstash:
 
 nginx:
   defines: runnable
-  inherits: nginx
   metadata:
     private: true
   services:
