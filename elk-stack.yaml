@@ -6,11 +6,11 @@ elasticsearch:
   services:
     elasticsearch:
       container: elasticsearch
-      port: <- `${port}`
+      port: <- `${port}` 
       protocol: tcp
     elasticsearch-internal:
       container: elasticsearch
-      port: <- `${internal-port}`
+      port: <- `${internal-port}` 
       protocol: tcp
   metadata:
     defines: metadata
@@ -63,9 +63,9 @@ kibana:
   services:
     kibana-http:
       container: kibana
-      port: <- `${port}` to-i
+      port: <- `${port}` 
       protocol: tcp
-      host-port: <- `${port}` to-i
+      host-port: <- `${port}` 
   connections:
     elasticsearch:
       runnable: elk/elasticsearch
@@ -124,15 +124,15 @@ logstash:
   services:
     logstash-5044:
       container: logstash
-      port: 5044
+      port: 5044 
       protocol: tcp
     logstash-50000:
       container: logstash
-      port: 50000
+      port: 50000 
       protocol: tcp
     logstash-9600:
       container: logstash
-      port: 9600
+      port: 9600 
       protocol: tcp    
   connections:
     elasticsearch:
@@ -199,9 +199,9 @@ nginx:
   services:
     nginx:
       container: nginx-reverse-proxy
-      port: <- `${listen-port}`
+      port: <- `${listen-port}` 
       protocol: tcp
-      host-port: <- `${listen-port}`
+      host-port: <- `${listen-port}` 
   connections:
     kibana:
       runnable: elk/kibana
@@ -240,13 +240,13 @@ nginx:
       type: string
     listen-port:
       value: <- $nginx-listen-port
-      type: string
+      type: int
     server-name:
       value: <- $kibana-server-name
       type: string
     proxy-target-port:
       value: <- $kibana-http-port
-      type: string
+      type: int
     nginx-image:
       value: <- $nginx-image-tag
       type: string      

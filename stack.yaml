@@ -8,17 +8,39 @@ stack:
     - elk/logstash
     - elk/nginx
   variables:
-    elasticsearch-image-tag: 7.9.0
-    elasticsearch-jvm-options: "-Xmx256m -Xms256m"
-    elasticsearch-http-port: 9200
-    elasticsearch-internal-port: 9300
-    kibana-http-port: 5601
-    kibana-image-tag: 7.9.0
-    logstash-image-tag: 7.17.5
-    logstash-jvm-options: "-Xmx256m -Xms256m"   
-    logstash-http-port: 9600
-    nginx-listen-port: 80
-    nginx-image-tag: latest
+    elasticsearch-image-tag:
+      value: 7.9.0
+      type: string     
+    elasticsearch-jvm-options: 
+      value: "-Xmx256m -Xms256m"
+      type: string     
+    elasticsearch-http-port: 
+      value: 9200
+      type: int    
+    elasticsearch-internal-port:
+      value: 9300
+      type: int    
+    kibana-http-port:
+      value: 5601
+      type: int    
+    kibana-image-tag:
+      value: 7.9.0
+      type: string  
+    logstash-image-tag:
+      value: 7.17.5
+      type: string     
+    logstash-jvm-options: 
+      value: "-Xmx256m -Xms256m"
+      type: string        
+    logstash-http-port:
+      value: 9600
+      type: int    
+    nginx-listen-port:
+      value: 80
+      type: int    
+    nginx-image-tag:
+      value: latest
+      type: string    
 
 
 
