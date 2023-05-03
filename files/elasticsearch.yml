@@ -3,12 +3,12 @@
 #
 # Set a custom port for the node to node communication (9300 by default):
 
-transport.tcp.port: {{ v "elasticsearch-internal-port" }}
+transport.tcp.port: {{ v "internal-port" }}
 
 
 # Set a custom port to listen for HTTP traffic:
 
-http.port: {{ v "elasticsearch-http-port" }}
+http.port: {{ v "port" }}
 
 # Set both 'bind_host' and 'publish_host':
 

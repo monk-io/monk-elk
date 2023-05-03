@@ -1,5 +1,5 @@
 api.http.host: 0.0.0.0
-api.http.port: {{ v "elasticsearch-http-port" }}
+api.http.port: {{ v "elasticsearch-port" }}
 
 
 # Settings file in YAML
