@@ -41,17 +41,17 @@ elasticsearch:
   variables:
     defines: variables
     elasticsearch-image:
-      value: <- $elasticsearch-image-tag
+      value: <- $elasticsearch-image-tag default("7.9.0")
       type: string
     jvm-opts:
       env: ES_JAVA_OPTS
-      value: <- $elasticsearch-jvm-options
+      value: <- $elasticsearch-jvm-options default("-Xmx256m -Xms256m")
       type: string
     port:
-      value: <- $elasticsearch-http-port
+      value: <- $elasticsearch-http-port default(9200)
       type: int
     internal-port:
-      value: <- $elasticsearch-internal-port
+      value: <- $elasticsearch-internal-port default(9300)
       type: int
     discovery-type:
       env: discovery.type
@@ -105,17 +105,17 @@ kibana:
   variables:
     defines: variables
     kibana-image:
-      value: <- $kibana-image-tag
+      value: <- $kibana-image-tag default("7.9.0")
       type: string    
     elasticsearch-hosts:
       type: string
       value: <- connection-hostname("elasticsearch")
     port:
       type: int
-      value:  <- $kibana-http-port
+      value:  <- $kibana-http-port default(5601)
     elasticsearch-port:
       type: int
-      value:  <- $elasticsearch-http-port
+      value:  <- $elasticsearch-http-port default(9200)
       
 
 
@@ -174,21 +174,21 @@ logstash:
   variables:
     defines: variables
     logstash-image:
-      value: <- $logstash-image-tag
+      value: <- $logstash-image-tag default("7.17.5")
       type: string    
     elasticsearch-hosts:
       type: string
       value: <- connection-hostname("elasticsearch")
     elasticsearch-port:
       type: int
-      value:  <- $elasticsearch-http-port
+      value:  <- $elasticsearch-http-port default(9200)
     jvm-opts:
       env: LS_JAVA_OPTS
-      value: <- $logstash-jvm-options
+      value: <- $logstash-jvm-options default("-Xmx256m -Xms256m")
       type: string
     monitoring-elasticsearch-hosts:
       env: monitoring.elasticsearch.hosts
-      value: <- "http://" connection-hostname("elasticsearch") ":" $elasticsearch-http-port concat-all
+      value: <- "http://" connection-hostname("elasticsearch") ":" $elasticsearch-port concat-all
       type: string
 
 
@@ -239,14 +239,14 @@ nginx:
       value: <- connection-hostname("kibana")
       type: string
     listen-port:
-      value: <- $nginx-listen-port
+      value: <- $nginx-listen-port default(80)
       type: int
     server-name:
       value: <- $kibana-server-name
       type: string
     proxy-target-port:
-      value: <- $kibana-http-port
+      value: <- $kibana-http-port default(5601)
       type: int
     nginx-image:
-      value: <- $nginx-image-tag
+      value: <- $nginx-image-tag default("latest")
       type: string      
