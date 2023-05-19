@@ -51,7 +51,6 @@ kibana:
       container: kibana
       port: <- `${port}`
       protocol: tcp
-      host-port: <- `${port}`
   connections:
     elasticsearch:
       runnable: elk/elasticsearch
