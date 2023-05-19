@@ -6,7 +6,7 @@ This template includes Nginx as a reverse proxy  with ELK Stack  out of box.
 
 ## Start
 
-Set up Monk - https://docs.monk.io/docs/monk-in-10/
+Set up Monk - [https://docs.monk.io/docs/monk-in-10/](https://docs.monk.io/docs/monk-in-10/)
 
 Start `monkd` and login.
 
@@ -16,7 +16,8 @@ monk login --email=<email> --password=<password>
 
 ## Clone Monk ELK repository
 
-In order to load templates and change configuration simply use below commands: 
+In order to load templates and change configuration simply use below commands:
+
 ```bash
 git clone https://github.com/monk-io/monk-elk
 
@@ -48,42 +49,35 @@ The current variables can be found in `elk/variables` section
 
 ### ELK Stack configuration files
 
-You can find configuration files in `/files` directory in repository and can edit before the running kit. There are 4 configuration files which bind to the container while run monk-elk kit 
+You can find configuration files in `/files` directory in repository and can edit before the running kit. There are 4 configuration files which bind to the container while run monk-elk kit
 
+| Configuration File         | Format Used        | Directory in Container                               | Purpose                                                                                                                           |
+| -------------------------- | ------------------ | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| **elasticsearch.yml**      | yaml               | `/usr/share/elasticsearch/config/elasticsearch.yml` | Primary configuration file for Elasticsearch                                                                                      |
+| **kibana.yml**             | yaml               | `/usr/share/kibana/config/kibana.yml`                | The Kibana server reads properties from the kibana.yml file on startup.                                                           |
+| **logstash.yml**           | yaml               | `/usr/share/logstash/config/logstash.yml`            | You can set options in the Logstash settings file, logstash.yml, to control Logstash execution                                    |
+| **pipeline/logstash.conf** | configuration file | `/usr/share/logstash/pipeline/logstash.conf`         | You can create a pipeline by stringing together plugins, inputs, outputs, filters, and sometimes codecs in order to process data. |
 
-| Configuration File	 | Format Used | Directory in Container | Purpose 
-|----------|-------------|------|---------|
-| **elasticsearch.yml** | yaml | ` /usr/share/elasticsearch/config/elasticsearch.yml` | Primary configuration file for Elasticsearch
-| **kibana.yml** | yaml | `/usr/share/kibana/config/kibana.yml` | The Kibana server reads properties from the kibana.yml file on startup. | 
-| **logstash.yml** | yaml | `/usr/share/logstash/config/logstash.yml` | You can set options in the Logstash settings file, logstash.yml, to control Logstash execution |
-| **pipeline/logstash.conf** | configuration file | `/usr/share/logstash/pipeline/logstash.conf` | You can create a pipeline by stringing together plugins, inputs, outputs, filters, and sometimes codecs in order to process data. |
+## Template variables
 
-
-
-
-
-##  Template variables
-
-| Variable | Description | Type | Example |
-|----------|-------------|------|---------|
-| **elasticsearch-image-tag** | Elasticsearch image version. | string | 7.9.0 |
-| **elasticsearch-jvm-options** | Elasticsearch jvm options. | string | "-Xmx256m -Xms256m" |
-| **elasticsearch-http-port** | Elasticsearch port that will accept requests | int | 9200
-| **elasticsearch-internal-port** | Elasticsearch custom port for the node to node communication | int | 9300
-| **kibana-http-port** | Kibana http port for UI | int | 9300 |
-| **kibana-image-tag** | Kibana image version. | string | 7.9.0 |
-| **logstash-image-tag** | Logstash image version. | string | 7.17.5 |
-| **logstash-jvm-options** | Logstash jvm options. | string | "-Xmx256m -Xms256m" |
-| **logstash-http-port** | Logstash port that will accept requests | int | 9600
-| **nginx-listen-port** | Configures the ports that the nginx listens on. | int | 80 |
-| **nginx-image-tag** | Nginx image version. | string | latest |
-
-
+| Variable                        | Description                                                  | Type   | Example             |
+| ------------------------------- | ------------------------------------------------------------ | ------ | ------------------- |
+| **elasticsearch-image-tag**     | Elasticsearch image version.                                 | string | 7.9.0               |
+| **elasticsearch-jvm-options**   | Elasticsearch jvm options.                                   | string | "-Xmx256m -Xms256m" |
+| **elasticsearch-http-port**     | Elasticsearch port that will accept requests                 | int    | 9200                |
+| **elasticsearch-internal-port** | Elasticsearch custom port for the node to node communication | int    | 9300                |
+| **kibana-http-port**            | Kibana http port for UI                                      | int    | 9300                |
+| **kibana-image-tag**            | Kibana image version.                                        | string | 7.9.0               |
+| **logstash-image-tag**          | Logstash image version.                                      | string | 7.17.5              |
+| **logstash-jvm-options**        | Logstash jvm options.                                        | string | "-Xmx256m -Xms256m" |
+| **logstash-http-port**          | Logstash port that will accept requests                      | int    | 9600                |
+| **nginx-listen-port**           | Configures the ports that the nginx listens on.              | int    | 80                  |
+| **nginx-image-tag**             | Nginx image version.                                         | string | latest              |
 
 ## Local Deployment
 
-First clone the repository simply run below command after launching `monkd`:
-:
+| First clone the repository simply run below command after launching `monkd`: |
+| :--------------------------------------------------------------------------: |
 
 ```bash
 ➜  monk load MANIFEST
@@ -123,8 +117,7 @@ runnable  nginx/reverse-proxy-ssl-certbot  elk         1.15-alpine  -
 
 ```
 
-This will start the entire elk/stack with a Nginx reverse proxy. 
-
+This will start the entire elk/stack with a Nginx reverse proxy.
 
 ## Cloud Deployment
 
@@ -167,6 +160,7 @@ Your cluster has been created successfully.
 ```
 
 Once cluster is ready execute the same command as for local and select your cluster (the option will appear automatically).
+
 ```bash
 ➜  monk load MANIFEST
 
