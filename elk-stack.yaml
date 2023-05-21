@@ -1,5 +1,6 @@
 ---
 namespace: elk
+
 elasticsearch:
   defines: runnable
   services:
@@ -16,7 +17,7 @@ elasticsearch:
   containers:
     elasticsearch:
       image: docker.elastic.co/elasticsearch/elasticsearch
-      image-tag: <- `${elasticsearch-image}`
+      image-tag: <- $elasticsearch-image
       user: '1000'
       paths:
         - <- `${monk-volume-path}/elasticsearch/data:/usr/share/elasticsearch/data`
@@ -44,12 +45,13 @@ elasticsearch:
       env: discovery.type
       value: single-node
       type: string
+
 kibana:
   defines: runnable
   services:
     kibana-http:
       container: kibana
-      port: <- `${port}`
+      port: <- $port
       protocol: tcp
   connections:
     elasticsearch:
@@ -70,14 +72,16 @@ kibana:
   containers:
     kibana:
       image: docker.elastic.co/kibana/kibana
-      image-tag: <- `${kibana-image}`
+      image-tag: <- $kibana-image
       user: '1000'
       environment:
         - <- `ELASTICSEARCH_HOSTS=http://${elasticsearch-hosts}:${elasticsearch-port}`
-      paths: ['<- `${monk-volume-path}/kibana/data:/usr/share/kibana/data`']
+      paths:
+        - <- `${monk-volume-path}/kibana/data:/usr/share/kibana/data`
   depends:
     wait-for:
-      runnables: [elk/elasticsearch]
+      runnables:
+        - elk/elasticsearch
   files:
     kibana-config:
       container: kibana
@@ -97,6 +101,7 @@ kibana:
     elasticsearch-port:
       type: int
       value: <- $elasticsearch-http-port default(9200)
+
 logstash:
   defines: runnable
   services:
@@ -131,11 +136,12 @@ logstash:
   containers:
     logstash:
       image: docker.elastic.co/logstash/logstash
-      image-tag: <- `${logstash-image}`
+      image-tag: <- $logstash-image
       user: root
   depends:
     wait-for:
-      runnables: [elk/elasticsearch]
+      runnables:
+        - elk/elasticsearch
   files:
     logstash-config:
       container: logstash
@@ -163,19 +169,28 @@ logstash:
       type: string
     monitoring-elasticsearch-hosts:
       env: monitoring.elasticsearch.hosts
-      value: <- "http://" connection-hostname("elasticsearch") ":" $elasticsearch-port
-        concat-all
+      value: <- "http://" connection-hostname("elasticsearch") ":" $elasticsearch-port concat-all
       type: string
+
 nginx:
   defines: runnable
   metadata:
     private: true
+    name: nginx
+    description: |
+      Nginx (pronounced "engine-x") is a popular open-source web server and reverse proxy server software. 
+      It is known for its high-performance, scalability, and reliability, making it a widely used solution for serving static and dynamic web content.
+    tags: self hosted, webserver, logging, loadbalancer, ssl, http server,reverse proxy
+    website: https://nginx.org/en/
+    source: https://github.com/nginx
+    publisher: monk.io
+    icon: https://assets.monk.io/icons/nginx-logo-FF65602A76-seeklogo.com.png
   services:
     nginx:
       container: nginx-reverse-proxy
-      port: <- `${listen-port}`
+      port: <- $listen-port
       protocol: tcp
-      host-port: <- `${listen-port}`
+      host-port: <- $listen-port
   connections:
     kibana:
       runnable: elk/kibana
@@ -193,17 +208,19 @@ nginx:
             proxy_pass http://{{ v "proxy-target-host" }}:{{ v "proxy-target-port" }};
           }
         }
-      mode: 511
+      mode: 0644
       path: /opt/bitnami/nginx/conf/server_blocks/reverse_proxy.conf
       container: nginx-reverse-proxy
   containers:
     nginx-reverse-proxy:
-      image-tag: <- `${nginx-image}`
       image: docker.io/bitnami/nginx
-      cap-add: [CAP_NET_BIND_SERVICE]
+      image-tag: <- $nginx-image
+      cap-add:
+        - CAP_NET_BIND_SERVICE
   depends:
     wait-for:
-      runnables: [elk/kibana]
+      runnables:
+        - elk/kibana
       timeout: 30
   variables:
     proxy-target-host:
