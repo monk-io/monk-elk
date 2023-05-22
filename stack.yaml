@@ -1,7 +1,20 @@
+---
 namespace: elk
 
 stack:
   defines: process-group
+  metadata:
+    private: false
+    name: elkstack
+    description: |
+      Elasticsearch is an open-source, distributed, RESTful search and analytics engine. 
+      It is built on top of the Apache Lucene library and is designed for high-speed searching, indexing, and analysis of large volumes of data in real-time.
+      Elasticsearch is part of the Elastic Stack, which also includes Logstash for data collection and processing, and Kibana for data visualization and management.
+    tags: self hosted, data processing pipeline, logging, visualization, monitoring, cluster
+    website: https://www.elastic.co/kibana/
+    source: https://www.elastic.co/logstash/
+    publisher: monk.io
+    icon: https://www.vectorlogo.zone/logos/elasticco_logstash/elasticco_logstash-ar21.png
   runnable-list:
     - elk/elasticsearch
     - elk/kibana
@@ -10,39 +23,34 @@ stack:
   variables:
     elasticsearch-image-tag:
       value: 7.9.0
-      type: string     
-    elasticsearch-jvm-options: 
-      value: "-Xmx256m -Xms256m"
-      type: string     
-    elasticsearch-http-port: 
+      type: string
+    elasticsearch-jvm-options:
+      value: -Xmx256m -Xms256m
+      type: string
+    elasticsearch-http-port:
       value: 9200
-      type: int    
+      type: int
     elasticsearch-internal-port:
       value: 9300
-      type: int    
+      type: int
     kibana-http-port:
       value: 5601
-      type: int    
+      type: int
     kibana-image-tag:
       value: 7.9.0
-      type: string  
+      type: string
     logstash-image-tag:
       value: 7.17.5
-      type: string     
-    logstash-jvm-options: 
-      value: "-Xmx256m -Xms256m"
-      type: string        
+      type: string
+    logstash-jvm-options:
+      value: -Xmx256m -Xms256m
+      type: string
     logstash-http-port:
       value: 9600
-      type: int    
+      type: int
     nginx-listen-port:
       value: 80
-      type: int    
+      type: int
     nginx-image-tag:
       value: latest
-      type: string    
-
-
-
-
-
+      type: string
