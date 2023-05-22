@@ -6,11 +6,11 @@ elasticsearch:
   services:
     elasticsearch:
       container: elasticsearch
-      port: <- `${port}`
+      port: <- $port
       protocol: tcp
     elasticsearch-internal:
       container: elasticsearch
-      port: <- `${internal-port}`
+      port: <- $internal-port
       protocol: tcp
   metadata:
     private: true
