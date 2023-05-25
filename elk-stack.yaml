@@ -128,7 +128,7 @@ logstash:
       Logstash is an open-source data collection and processing tool that is part of the Elastic Stack, which also includes Elasticsearch for search and analytics, and Kibana for data visualization and management. 
       Logstash is designed to collect, process, and transform data from various sources, and then send it to Elasticsearch for indexing and analysis.
       Logstash is commonly used for collecting, parsing, and enriching log data, but it can also handle a wide variety of other data types such as metrics, events, and other structured or unstructured data. Some key features of Logstash include:
-    tags: self hosted, data processing pipeline, logging
+    tags: self hosted, logging, data processing pipeline
     website: https://www.elastic.co/kibana/
     source: https://www.elastic.co/logstash/
     publisher: monk.io
@@ -180,7 +180,7 @@ nginx:
     description: |
       Nginx (pronounced "engine-x") is a popular open-source web server and reverse proxy server software. 
       It is known for its high-performance, scalability, and reliability, making it a widely used solution for serving static and dynamic web content.
-    tags: self hosted, webserver, logging, loadbalancer, ssl, http server,reverse proxy
+    tags: webserver, ssl, logging, loadbalancer, self hosted, reverse proxy, http server
     website: https://nginx.org/en/
     source: https://github.com/nginx
     publisher: monk.io
