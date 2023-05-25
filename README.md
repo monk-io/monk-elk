@@ -51,12 +51,12 @@ The current variables can be found in `elk/variables` section
 
 You can find configuration files in `/files` directory in repository and can edit before the running kit. There are 4 configuration files which bind to the container while run monk-elk kit
 
-| Configuration File         | Format Used        | Directory in Container                               | Purpose                                                                                                                           |
-| -------------------------- | ------------------ | ---------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
+| Configuration File         | Format Used        | Directory in Container                              | Purpose                                                                                                                           |
+| -------------------------- | ------------------ | --------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | **elasticsearch.yml**      | yaml               | `/usr/share/elasticsearch/config/elasticsearch.yml` | Primary configuration file for Elasticsearch                                                                                      |
-| **kibana.yml**             | yaml               | `/usr/share/kibana/config/kibana.yml`                | The Kibana server reads properties from the kibana.yml file on startup.                                                           |
-| **logstash.yml**           | yaml               | `/usr/share/logstash/config/logstash.yml`            | You can set options in the Logstash settings file, logstash.yml, to control Logstash execution                                    |
-| **pipeline/logstash.conf** | configuration file | `/usr/share/logstash/pipeline/logstash.conf`         | You can create a pipeline by stringing together plugins, inputs, outputs, filters, and sometimes codecs in order to process data. |
+| **kibana.yml**             | yaml               | `/usr/share/kibana/config/kibana.yml`               | The Kibana server reads properties from the kibana.yml file on startup.                                                           |
+| **logstash.yml**           | yaml               | `/usr/share/logstash/config/logstash.yml`           | You can set options in the Logstash settings file, logstash.yml, to control Logstash execution                                    |
+| **pipeline/logstash.conf** | configuration file | `/usr/share/logstash/pipeline/logstash.conf`        | You can create a pipeline by stringing together plugins, inputs, outputs, filters, and sometimes codecs in order to process data. |
 
 ## Template variables
 

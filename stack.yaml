@@ -7,14 +7,16 @@ stack:
     private: false
     name: elkstack
     description: |
-      Elasticsearch is an open-source, distributed, RESTful search and analytics engine. 
+      Elasticsearch is an open-source, distributed, RESTful search and analytics engine.
+
       It is built on top of the Apache Lucene library and is designed for high-speed searching, indexing, and analysis of large volumes of data in real-time.
+
       Elasticsearch is part of the Elastic Stack, which also includes Logstash for data collection and processing, and Kibana for data visualization and management.
     tags: visualization, logging, self hosted, cluster, monitoring, data processing pipeline
-    website: https://www.elastic.co/kibana/
-    source: https://www.elastic.co/logstash/
+    website: https://www.elastic.co/
+    source: https://github.com/elastic
     publisher: monk.io
-    icon: https://www.vectorlogo.zone/logos/elasticco_logstash/elasticco_logstash-ar21.png
+    icon: https://images.contentstack.io/v3/assets/bltefdd0b53724fa2ce/blt549f7d977c2a88f4/5d082d34616162aa5a85707d/logo-enterprise-search-32-color.svg
   runnable-list:
     - elk/elasticsearch
     - elk/kibana
