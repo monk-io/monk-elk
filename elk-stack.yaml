@@ -13,6 +13,18 @@ elasticsearch:
       port: <- $internal-port
       protocol: tcp
   metadata:
+    name: Elasticsearch
+    description: |
+      Elasticsearch is an open-source, distributed, RESTful search and analytics engine.
+
+      It is built on top of the Apache Lucene library and is designed for high-speed searching, indexing, and analysis of large volumes of data in real-time.
+
+      Elasticsearch is part of the Elastic Stack, which also includes Logstash for data collection and processing, and Kibana for data visualization and management.
+    tags: visualization, logging, self hosted, cluster, monitoring, data processing pipeline
+    website: https://www.elastic.co/
+    source: https://github.com/elastic/elasticsearch
+    publisher: monk.io
+    icon: https://images.contentstack.io/v3/assets/bltefdd0b53724fa2ce/blt549f7d977c2a88f4/5d082d34616162aa5a85707d/logo-enterprise-search-32-color.svg
     private: true
   containers:
     elasticsearch:
@@ -59,14 +71,16 @@ kibana:
       service: elasticsearch
   metadata:
     private: true
-    name: kibana
+    name: Kibana
     description: |
-      Kibana is an open-source data visualization and exploration tool that is part of the Elastic Stack, which also includes Elasticsearch for search and analytics, and Logstash for data collection and processing. 
+      Kibana is an open-source data visualization and exploration tool that is part of the Elastic Stack, which also includes Elasticsearch for search and analytics, and Logstash for data collection and processing.
+
       Kibana provides a web-based interface for visualizing, analyzing, and managing data stored in Elasticsearch, making it a powerful tool for exploring and understanding large volumes of data.
+
       Kibana allows users to create a wide range of visualizations, dashboards, and reports to gain insights from data. Some key features of Kibana include:
     tags: self hosted, visualization, monitoring
     website: https://www.elastic.co/kibana/
-    source: https://github.com/elastic/elasticsearch
+    source: https://github.com/elastic/kibana
     publisher: monk.io
     icon: https://www.vectorlogo.zone/logos/elasticco_kibana/elasticco_kibana-ar21.png
   containers:
@@ -125,11 +139,13 @@ logstash:
     private: true
     name: logstash
     description: |
-      Logstash is an open-source data collection and processing tool that is part of the Elastic Stack, which also includes Elasticsearch for search and analytics, and Kibana for data visualization and management. 
+      Logstash is an open-source data collection and processing tool that is part of the Elastic Stack, which also includes Elasticsearch for search and analytics, and Kibana for data visualization and management.
+
       Logstash is designed to collect, process, and transform data from various sources, and then send it to Elasticsearch for indexing and analysis.
+
       Logstash is commonly used for collecting, parsing, and enriching log data, but it can also handle a wide variety of other data types such as metrics, events, and other structured or unstructured data. Some key features of Logstash include:
     tags: self hosted, logging, data processing pipeline
-    website: https://www.elastic.co/kibana/
+    website: https://www.elastic.co/logstash/
     source: https://www.elastic.co/logstash/
     publisher: monk.io
     icon: https://www.vectorlogo.zone/logos/elasticco_logstash/elasticco_logstash-ar21.png
@@ -178,7 +194,7 @@ nginx:
     private: true
     name: nginx
     description: |
-      Nginx (pronounced "engine-x") is a popular open-source web server and reverse proxy server software. 
+      Nginx (pronounced "engine-x") is a popular open-source web server and reverse proxy server software.
       It is known for its high-performance, scalability, and reliability, making it a widely used solution for serving static and dynamic web content.
     tags: webserver, ssl, logging, loadbalancer, self hosted, reverse proxy, http server
     website: https://nginx.org/en/
