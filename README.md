@@ -34,13 +34,13 @@ The current variables can be found in `elk/variables` section
 
 ```yaml
   variables:
-    elasticsearch-image-tag: 7.9.0
+    elasticsearch-image-tag: 8.15.3
     elasticsearch-jvm-options: "-Xmx256m -Xms256m"
     elasticsearch-http-port: 9200
     elasticsearch-internal-port: 9300
     kibana-http-port: 5601
-    kibana-image-tag: 7.9.0
-    logstash-image-tag: 7.17.5
+    kibana-image-tag: 8.15.3
+    logstash-image-tag: 8.15.3
     logstash-jvm-options: "-Xmx256m -Xms256m"   
     logstash-http-port: 9600
     nginx-listen-port: 8080
@@ -62,13 +62,13 @@ You can find configuration files in `/files` directory in repository and can edi
 
 | Variable                        | Description                                                  | Type   | Example             |
 | ------------------------------- | ------------------------------------------------------------ | ------ | ------------------- |
-| **elasticsearch-image-tag**     | Elasticsearch image version.                                 | string | 7.9.0               |
+| **elasticsearch-image-tag**     | Elasticsearch image version.                                 | string | 8.15.3               |
 | **elasticsearch-jvm-options**   | Elasticsearch jvm options.                                   | string | "-Xmx256m -Xms256m" |
 | **elasticsearch-http-port**     | Elasticsearch port that will accept requests                 | int    | 9200                |
 | **elasticsearch-internal-port** | Elasticsearch custom port for the node to node communication | int    | 9300                |
 | **kibana-http-port**            | Kibana http port for UI                                      | int    | 9300                |
-| **kibana-image-tag**            | Kibana image version.                                        | string | 7.9.0               |
-| **logstash-image-tag**          | Logstash image version.                                      | string | 7.17.5              |
+| **kibana-image-tag**            | Kibana image version.                                        | string | 8.15.3               |
+| **logstash-image-tag**          | Logstash image version.                                      | string | 8.15.3             |
 | **logstash-jvm-options**        | Logstash jvm options.                                        | string | "-Xmx256m -Xms256m" |
 | **logstash-http-port**          | Logstash port that will accept requests                      | int    | 9600                |
 | **nginx-listen-port**           | Configures the ports that the nginx listens on.              | int    | 80                  |

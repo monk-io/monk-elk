@@ -41,7 +41,7 @@ elasticsearch:
       contents: <<< files/elasticsearch.yml
   variables:
     elasticsearch-image:
-      value: <- $elasticsearch-image-tag default("7.9.0")
+      value: <- $elasticsearch-image-tag default("8.15.3")
       type: string
     jvm-opts:
       env: ES_JAVA_OPTS
@@ -104,7 +104,7 @@ kibana:
       contents: <<< files/kibana.yml
   variables:
     kibana-image:
-      value: <- $kibana-image-tag default("7.9.0")
+      value: <- $kibana-image-tag default("8.15.3")
       type: string
     elasticsearch-hosts:
       type: string
@@ -171,7 +171,7 @@ logstash:
       contents: <<< files/pipeline/logstash.conf
   variables:
     logstash-image:
-      value: <- $logstash-image-tag default("7.17.5")
+      value: <- $logstash-image-tag default("8.15.3")
       type: string
     elasticsearch-hosts:
       type: string
