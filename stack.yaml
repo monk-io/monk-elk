@@ -24,7 +24,7 @@ stack:
     - elk/nginx
   variables:
     elasticsearch-image-tag:
-      value: 7.9.0
+      value: 8.15.3
       type: string
     elasticsearch-jvm-options:
       value: -Xmx256m -Xms256m
@@ -39,10 +39,10 @@ stack:
       value: 5601
       type: int
     kibana-image-tag:
-      value: 7.9.0
+      value: 8.15.3
       type: string
     logstash-image-tag:
-      value: 7.17.5
+      value: 8.15.3
       type: string
     logstash-jvm-options:
       value: -Xmx256m -Xms256m

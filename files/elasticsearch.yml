@@ -3,7 +3,7 @@
 #
 # Set a custom port for the node to node communication (9300 by default):
 
-transport.tcp.port: {{ v "internal-port" }}
+transport.port: {{ v "internal-port" }}
 
 
 # Set a custom port to listen for HTTP traffic:
