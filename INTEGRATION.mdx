@@ -1,0 +1,231 @@
+---
+title: ELK Stack
+description: Ready-to-run ELK Stack (Elasticsearch, Logstash, Kibana) container stack you can run directly or inherit to integrate logging and analytics into your infrastructure.
+primary_category: observability
+tags: [elk, elasticsearch, logstash, kibana, template, runnable, stack, logging, analytics, monitoring]
+integration_type: template
+hosting_models: [self-hosted]
+website_url: https://www.elastic.co/elastic-stack
+docs_url: https://www.elastic.co/guide/index.html
+publisher: monk.io
+---
+
+## Overview
+
+This template provides a production‑ready ELK Stack as a Monk runnable. You can:
+
+- Run it directly to get a managed ELK deployment with all necessary components
+- Inherit it in your own stack to seamlessly add logging, search, and analytics capabilities
+
+The ELK Stack (Elasticsearch, Logstash, Kibana) is a powerful combination of tools for searching, analyzing, and visualizing log data in real time. This template includes Nginx as a reverse proxy for secure access to Kibana.
+
+## What this template manages
+
+- Elasticsearch container (search and analytics engine)
+- Logstash container (data processing pipeline)
+- Kibana container (visualization and management interface)
+- Nginx container (reverse proxy)
+- Network services on multiple ports
+- Persistent volumes for data storage
+- Custom configuration files for all components
+
+## Quick start (run directly)
+
+1) Load templates
+
+```bash
+monk load MANIFEST
+```
+
+2) Run ELK stack with defaults
+
+```bash
+monk run elk/stack
+```
+
+3) Access Kibana
+
+Once started, access Kibana through Nginx at `http://localhost` (default port 80).
+
+Running directly uses the defaults defined in this template's `variables`. To customize settings like ports or JVM options, you should either:
+
+- Preferred: inherit and override variables as shown below
+- Alternative: fork/clone and edit the `variables` in `elk/stack.yaml`, then `monk load MANIFEST` and run
+
+## Configuration
+
+Key variables you can customize in this template:
+
+```yaml
+variables:
+  elasticsearch-image-tag: "8.15.3"         # Elasticsearch container image tag
+  elasticsearch-jvm-options: "-Xmx256m -Xms256m"  # JVM heap settings
+  elasticsearch-http-port: 9200             # HTTP API port
+  elasticsearch-internal-port: 9300         # Internal cluster communication
+  kibana-image-tag: "8.15.3"                # Kibana container image tag
+  kibana-http-port: 5601                    # Kibana web interface port
+  logstash-image-tag: "8.15.3"              # Logstash container image tag
+  logstash-jvm-options: "-Xmx256m -Xms256m" # JVM heap settings
+  logstash-http-port: 9600                  # Logstash API port
+  nginx-listen-port: 80                     # Nginx proxy port (host-exposed)
+  nginx-image-tag: "latest"                 # Nginx container image tag
+```
+
+Data is persisted under `${monk-volume-path}/elasticsearch/data` and `${monk-volume-path}/kibana/data` on the host.
+
+## Configuration files
+
+You can find configuration files in the `/files` directory:
+
+| Configuration File         | Directory in Container                              | Purpose                                           |
+| -------------------------- | --------------------------------------------------- | ------------------------------------------------- |
+| **elasticsearch.yml**      | `/usr/share/elasticsearch/config/elasticsearch.yml` | Primary Elasticsearch configuration               |
+| **kibana.yml**             | `/usr/share/kibana/config/kibana.yml`               | Kibana server configuration                       |
+| **logstash.yml**           | `/usr/share/logstash/config/logstash.yml`           | Logstash execution settings                       |
+| **pipeline/logstash.conf** | `/usr/share/logstash/pipeline/logstash.conf`        | Logstash data processing pipeline configuration   |
+
+These files are automatically mounted into the containers. You can modify them before loading to customize the stack behavior.
+
+## Use by inheritance (recommended for apps)
+
+Inherit the ELK stack in your logging infrastructure and customize it:
+
+```yaml
+namespace: myapp
+
+logging:
+  defines: process-group
+  inherits: elk/stack
+  variables:
+    nginx-listen-port: 8080
+    elasticsearch-jvm-options: "-Xmx2g -Xms2g"
+    logstash-jvm-options: "-Xmx1g -Xms1g"
+
+api:
+  defines: runnable
+  containers:
+    api:
+      image: myorg/api
+  connections:
+    logging:
+      runnable: logging/elasticsearch
+      service: elasticsearch
+  variables:
+    elasticsearch-host:
+      value: <- connection-hostname("logging")
+    elasticsearch-port:
+      value: 9200
+```
+
+Then run your app group:
+
+```bash
+monk run myapp/api
+```
+
+Your application can now send logs to the Elasticsearch instance and visualize them through Kibana accessible at `http://localhost:8080`.
+
+## Stack components
+
+The ELK stack includes the following runnables:
+
+- `elk/elasticsearch` - Search and analytics engine (ports 9200, 9300)
+- `elk/kibana` - Visualization interface (port 5601)
+- `elk/logstash` - Data processing pipeline (ports 5044, 50000, 9600)
+- `elk/nginx` - Reverse proxy (port 80)
+
+All components are interconnected and start in the correct dependency order.
+
+## Ports and connectivity
+
+- **Nginx proxy**: TCP port `80` (configurable via `nginx-listen-port`)
+  - Exposed to host for external access to Kibana
+- **Elasticsearch HTTP API**: TCP port `9200`
+  - Used by Kibana, Logstash, and applications
+- **Elasticsearch internal**: TCP port `9300`
+  - Internal cluster communication
+- **Kibana**: TCP port `5601`
+  - Proxied through Nginx
+- **Logstash Beats**: TCP port `5044`
+  - For receiving logs from Beats agents
+- **Logstash TCP**: TCP port `50000`
+  - For receiving logs via TCP
+- **Logstash API**: TCP port `9600`
+  - Monitoring and management
+
+From other runnables in the same process group, use `connection-hostname("<connection-name>")` to resolve component hostnames.
+
+## Persistence and configuration
+
+Data paths (persisted to host volumes):
+- Elasticsearch data: `${monk-volume-path}/elasticsearch/data:/usr/share/elasticsearch/data`
+- Kibana data: `${monk-volume-path}/kibana/data:/usr/share/kibana/data`
+
+These volumes ensure your data persists across container restarts and updates.
+
+## Features
+
+- **Elasticsearch**: Distributed search and analytics engine with single-node configuration by default
+- **Logstash**: Flexible data collection and transformation pipeline with customizable filters
+- **Kibana**: Rich visualization and exploration interface for your data
+- **Nginx**: Secure reverse proxy with customizable configuration for external access
+- **Auto-connectivity**: Components are pre-configured to communicate with each other
+- **Health monitoring**: Built-in health checks and dependency management
+
+## Logs and shell access
+
+```bash
+# Show Elasticsearch logs
+monk logs -l 1000 -f elk/elasticsearch
+
+# Show Kibana logs
+monk logs -l 1000 -f elk/kibana
+
+# Show Logstash logs
+monk logs -l 1000 -f elk/logstash
+
+# Show Nginx logs
+monk logs -l 1000 -f elk/nginx
+
+# Show all stack logs
+monk logs -l 500 -f elk/stack
+
+# Access shell in Elasticsearch container
+monk shell elk/elasticsearch
+
+# Access shell in Kibana container
+monk shell elk/kibana
+
+# Access shell in Logstash container
+monk shell elk/logstash
+```
+
+## Related templates
+
+- Integrate with monitoring tools (Prometheus, Grafana)
+- Use with alerting systems (PagerDuty, Slack, email)
+- Combine with log shippers (`filebeat/`, `metricbeat/`, `fluentbit/`)
+- Connect to application stacks for centralized logging
+
+## Troubleshooting
+
+- **Ensure all required ports are available**: Check that ports 80, 5601, 9200, 9300, 5044, 50000, and 9600 are not in use.
+- **Verify JVM heap settings are appropriate for your system**: The default 256MB may be too low for production workloads. Increase via `elasticsearch-jvm-options` and `logstash-jvm-options`.
+- **Elasticsearch requires sufficient memory**: If Elasticsearch fails to start, check available memory. Production deployments typically need at least 2GB heap.
+- **Check that all components start in the correct order**: Dependencies are configured, but network issues can cause timeouts.
+- **Ensure host volumes are writable**: Containers run as user `1000`, ensure volume paths have appropriate permissions.
+
+Check logs for any component:
+
+```bash
+monk logs -l 500 -f elk/stack
+```
+
+If you encounter startup issues, try purging and restarting:
+
+```bash
+monk purge -x elk/stack
+monk run elk/stack
+```
+
+If Elasticsearch health checks fail, verify the node has sufficient resources and the discovery type is set correctly for your deployment (single-node by default).
